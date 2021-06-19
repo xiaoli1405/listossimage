@@ -32,9 +32,9 @@ public class TestOssController {
 
     private String ALIYUN_OSS_ENDPOINT = "oss-cn-beijing.aliyuncs.com";
 
-    private String ALIYUN_OSS_ACCESSKEYID = "LTAI5tCfswAWmLudFFrxRAQn";
+    private String ALIYUN_OSS_ACCESSKEYID = "";
 
-    private String ALIYUN_OSS_ACCESSKEYSECRET = "NxeyxAtD4m08JeKBu7aQwsLqS05GG2";
+    private String ALIYUN_OSS_ACCESSKEYSECRET = "";
 
     private String ALIYUN_OSS_BUCKETNAME = "lst-oss";
 
