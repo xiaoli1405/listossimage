@@ -1,6 +1,8 @@
 package com.example.listossimage.component;
 
 import com.example.listossimage.config.RocketMQConfig;
+import com.example.listossimage.repository.ImageRepository;
+import com.example.listossimage.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -8,6 +10,7 @@ import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.Message;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
@@ -22,6 +25,12 @@ public class RocketMQConsumer {
 
     //消费者实体
     private DefaultMQPushConsumer consumer;
+
+    @Autowired
+    private RedisService redisService;
+
+    @Autowired
+    private ImageRepository imageRepository;
 
     //消费者组
     public static final String CONSUMER_GROUP = "test_consumer";
@@ -44,6 +53,15 @@ public class RocketMQConsumer {
 
                     //消费者获取消息 这里只输出 不做后面逻辑处理
                     String body = new String(msg.getBody(), "utf-8");
+                    String s = redisService.get(body);
+                    //分割字符串
+                    //String substring = s.substring(s.lastIndexOf(","));
+                    String[] split = s.split(",");
+                    String fileName = split[0];
+                    String url = split[1];
+
+                    imageRepository.InsertImage(fileName, url);
+
                     log.info("Consumer-获取消息-主题topic为={}, 消费消息为={}", msg.getTopic(), body);
                 }
             } catch (UnsupportedEncodingException e) {

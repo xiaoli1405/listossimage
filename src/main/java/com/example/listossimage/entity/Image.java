@@ -11,8 +11,11 @@ public class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//自增主键
-    private Integer ImgId;
+    private Integer imgId;
 
     @Column
     private String imgUrl;
+
+    @Column
+    private String imgText;
 }
