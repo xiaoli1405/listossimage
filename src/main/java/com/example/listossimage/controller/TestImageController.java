@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 
-@Api(tags = "ImageController", description = "测试基础框架搭建接口")
+@Api(tags = "TestImageController", description = "测试基础框架搭建接口")
 @RestController
 @RequestMapping(value = "/image")
-public class ImageController {
+public class TestImageController {
 
     @Resource
     private ImageService imageService;
