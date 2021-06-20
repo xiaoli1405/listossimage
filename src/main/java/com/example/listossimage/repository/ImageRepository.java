@@ -14,7 +14,9 @@ public interface ImageRepository extends JpaRepository<Image, Integer> {
     @Query(value = "select * from image", nativeQuery = true)
     List<Image> GetImage();
 
-    @Modifying
-    @Query(value = " insert into image(img_url, img_text) value(#{imgUrl}, #{imgText})", nativeQuery = true)
+    @Query(value = " insert into image(img_url, img_text) values ( ?1 , ?2 ) ", nativeQuery = true)
     void InsertImage(String imgUrl, String imgText);
+
+//    @Query(value = "select * from image where img_text = ?1 ", nativeQuery = true)
+//    Image getImagesByImgText(String imgText);
 }

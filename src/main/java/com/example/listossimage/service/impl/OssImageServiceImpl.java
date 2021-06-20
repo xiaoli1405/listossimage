@@ -2,6 +2,7 @@ package com.example.listossimage.service.impl;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
+import com.example.listossimage.config.AliyunOssConfig;
 import com.example.listossimage.service.OssImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,13 @@ import java.util.Date;
 @Service
 public class OssImageServiceImpl implements OssImageService {
 
-    private String ALIYUN_OSS_ENDPOINT = "oss-cn-beijing.aliyuncs.com";
+    private String ALIYUN_OSS_ENDPOINT = AliyunOssConfig.ALIYUN_OSS_ENDPOINT.getS();
 
-    private String ALIYUN_OSS_ACCESSKEYID = "";
+    private String ALIYUN_OSS_ACCESSKEYID = AliyunOssConfig.ALIYUN_OSS_ACCESSKEYID.getS();
 
-    private String ALIYUN_OSS_ACCESSKEYSECRET = "";
+    private String ALIYUN_OSS_ACCESSKEYSECRET = AliyunOssConfig.ALIYUN_OSS_ACCESSKEYSECRET.getS();
 
-    private String ALIYUN_OSS_BUCKETNAME = "lst-oss";
+    private String ALIYUN_OSS_BUCKETNAME = AliyunOssConfig.ALIYUN_OSS_BUCKETNAME.getS();
 
     //初始化OSSClient
     OSSClient ossClient = new OSSClient(ALIYUN_OSS_ENDPOINT, ALIYUN_OSS_ACCESSKEYID, ALIYUN_OSS_ACCESSKEYSECRET);
