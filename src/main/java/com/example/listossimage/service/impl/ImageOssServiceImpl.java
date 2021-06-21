@@ -2,11 +2,17 @@ package com.example.listossimage.service.impl;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
+import com.example.listossimage.component.RocketMQProducer;
 import com.example.listossimage.config.AliyunOssConfig;
 import com.example.listossimage.config.RocketMQConfig;
 import com.example.listossimage.service.ImageOssService;
 import com.example.listossimage.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.exception.MQBrokerException;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,10 +41,10 @@ public class ImageOssServiceImpl implements ImageOssService {
     private RedisService redisService;
 
     @Autowired
-    private RocketMQTemplate rocketMQTemplate;
+    private RocketMQProducer producer;
 
     @Override
-    public String upload(MultipartFile multipartFile) throws IOException{
+    public String upload(MultipartFile multipartFile) throws IOException, InterruptedException, RemotingException, MQClientException, MQBrokerException {
         //初始化OSSClient
         OSSClient ossClient = new OSSClient(ALIYUN_OSS_ENDPOINT, ALIYUN_OSS_ACCESSKEYID, ALIYUN_OSS_ACCESSKEYSECRET);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -66,17 +72,19 @@ public class ImageOssServiceImpl implements ImageOssService {
         ossClient.shutdown();
 
         //上传成功后将文件名和URL保存到Redis缓存中去
-        redisService.set(finalFileName, originalFilename + "," +url);
+        redisService.set("objectFileName", originalFilename + "," + url);
 
 
         //将缓存中的KEY值放入队列当中
         //创建生产信息
-//        Message message = new Message(RocketMQConfig.TOPIC, "testtag", finalFileName.getBytes());
-//        //发送信息
-//        SendResult send = producer.getProducer().send(message);
+        Message message = new Message(RocketMQConfig.TOPIC, "testtag", finalFileName.getBytes());
+        //发送信息
+        SendResult send = producer.getProducer().send(message);
 
-        rocketMQTemplate.convertAndSend(RocketMQConfig.TOPIC, finalFileName);
-        log.info("输出生产者信息={}", finalFileName);
+//        rocketMQTemplate.convertAndSend(RocketMQConfig.TOPIC, finalFileName);
+//        //关闭生产者
+//        rocketMQTemplate.destroy();
+        log.info("输出生产者信息={}", send);
 
         return url;
     }

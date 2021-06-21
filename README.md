@@ -8,4 +8,8 @@ Redis 缓存数据
 RocketMQ 消息队列  
 PGSQL 数据库  
 OSS 阿里云对象存储  
-Swagger 接口文档工具
+Swagger 接口文档工具  
+
+  
+  BUG:数据在redis缓存没有被删除，导致consumer一直调用缓存数据插入数据库
+  方案：在从redis缓存中拿出数据的同时，清理掉缓存即可

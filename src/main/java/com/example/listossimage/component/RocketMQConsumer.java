@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
  * rocketMQ消费者
  */
 @Slf4j
+@Component
 public class RocketMQConsumer {
 
     //消费者实体
@@ -32,7 +33,7 @@ public class RocketMQConsumer {
     private ImageRepository imageRepository;
 
     //消费者组
-    public static final String CONSUMER_GROUP = "";
+    public static final String CONSUMER_GROUP = "test-consumer";
 
     //通过构造函数 实例化对象
     public RocketMQConsumer() throws MQClientException {
@@ -41,7 +42,7 @@ public class RocketMQConsumer {
         //消费模式：一个新的订阅组第一次启动从队列的最后位置开始消费 后续再接着上次消费的进度开始消费
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
         //订阅主题和 标签下信息
-        consumer.subscribe("", "*");
+        consumer.subscribe(RocketMQConfig.TOPIC, "*");
 
         //注册消费监听器 并在监听器中消费消息， 并返回消费的状态信息
         consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
@@ -49,17 +50,19 @@ public class RocketMQConsumer {
             // 会把不同的消息分别放置到不同的队列中
             try {
                 for (Message msg : msgs) {
-                    System.out.println("开始消费" + msg + "ddd" +msgs);
                     //消费者获取消息 这里只输出 不做后面逻辑处理
                     String body = new String(msg.getBody(), "utf-8");
-                    String s = redisService.get(body);
+                    //System.out.println(body);
+                    String s = redisService.get("objectFileName");
+                    redisService.remove("objectFileName");
                     //分割字符串
                     //String substring = s.substring(s.lastIndexOf(","));
                     String[] split = s.split(",");
-                    String fileName = split[0];
-                    String url = split[1];
+                    String fileName = split[1];
+                    String url = split[0];
 
-                    imageRepository.InsertImage(fileName, url);
+                    Integer maxId = imageRepository.getMaxId() + 1;
+                    imageRepository.InsertImage(maxId,fileName, url);
 
                     log.info("Consumer-获取消息-主题topic为={}, 消费消息为={}", msg.getTopic(), body);
                 }

@@ -26,6 +26,9 @@ public class ImageOssController {
     @ApiOperation("上传图片")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String upload(@RequestBody MultipartFile multipartFile) throws InterruptedException, RemotingException, MQClientException, MQBrokerException, IOException {
+        if(multipartFile == null) {
+            return "您还未上传图片，请上传图片！";
+        }
         return imageOssService.upload(multipartFile);
     }
 }
