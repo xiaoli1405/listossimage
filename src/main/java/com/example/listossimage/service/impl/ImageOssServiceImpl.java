@@ -72,12 +72,12 @@ public class ImageOssServiceImpl implements ImageOssService {
         ossClient.shutdown();
 
         //上传成功后将文件名和URL保存到Redis缓存中去
-        redisService.set("objectFileName", originalFilename + "," + url);
+        redisService.set("finalFileName", originalFilename + "," + url);
 
 
         //将缓存中的KEY值放入队列当中
         //创建生产信息
-        Message message = new Message(RocketMQConfig.TOPIC, "testtag", finalFileName.getBytes());
+        Message message = new Message(RocketMQConfig.TOPIC, "testtag", "finalFileName".getBytes());
         //发送信息
         SendResult send = producer.getProducer().send(message);
 
@@ -85,6 +85,7 @@ public class ImageOssServiceImpl implements ImageOssService {
 //        //关闭生产者
 //        rocketMQTemplate.destroy();
         log.info("输出生产者信息={}", send);
+        producer.shutdown();
 
         return url;
     }

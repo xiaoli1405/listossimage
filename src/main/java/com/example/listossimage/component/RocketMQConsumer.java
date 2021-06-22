@@ -13,6 +13,7 @@ import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
 
 
@@ -36,6 +37,7 @@ public class RocketMQConsumer {
     public static final String CONSUMER_GROUP = "test-consumer";
 
     //通过构造函数 实例化对象
+    //@PostConstruct
     public RocketMQConsumer() throws MQClientException {
         consumer = new DefaultMQPushConsumer(CONSUMER_GROUP);
         consumer.setNamesrvAddr(RocketMQConfig.NAME_SERVER);
@@ -53,8 +55,8 @@ public class RocketMQConsumer {
                     //消费者获取消息 这里只输出 不做后面逻辑处理
                     String body = new String(msg.getBody(), "utf-8");
                     //System.out.println(body);
-                    String s = redisService.get("objectFileName");
-                    redisService.remove("objectFileName");
+                    String s = redisService.get(body);
+                    redisService.remove(body);
                     //分割字符串
                     //String substring = s.substring(s.lastIndexOf(","));
                     String[] split = s.split(",");
@@ -64,7 +66,7 @@ public class RocketMQConsumer {
                     Integer maxId = imageRepository.getMaxId() + 1;
                     imageRepository.InsertImage(maxId,fileName, url);
 
-                    log.info("Consumer-获取消息-主题topic为={}, 消费消息为={}", msg.getTopic(), body);
+                    //log.info("Consumer-获取消息-主题topic为={}, 消费消息为={}", msg.getTopic(), body);
                 }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
