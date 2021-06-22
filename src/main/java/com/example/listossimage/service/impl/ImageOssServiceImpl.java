@@ -15,6 +15,7 @@ import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,13 +30,17 @@ import java.util.Date;
 public class ImageOssServiceImpl implements ImageOssService {
 
 
-    private String ALIYUN_OSS_ENDPOINT = AliyunOssConfig.ALIYUN_OSS_ENDPOINT.getS();
+    @Value("${aliyun.oss.endpoint}")
+    private String ALIYUN_OSS_ENDPOINT;
 
-    private String ALIYUN_OSS_ACCESSKEYID = AliyunOssConfig.ALIYUN_OSS_ACCESSKEYID.getS();
+    @Value("${aliyun.accessKeyId}")
+    private String ALIYUN_OSS_ACCESSKEYID;
 
-    private String ALIYUN_OSS_ACCESSKEYSECRET = AliyunOssConfig.ALIYUN_OSS_ACCESSKEYSECRET.getS();
+    @Value("${aliyun.accessKeySecret}")
+    private String ALIYUN_OSS_ACCESSKEYSECRET;
 
-    private String ALIYUN_OSS_BUCKETNAME = AliyunOssConfig.ALIYUN_OSS_BUCKETNAME.getS();
+    @Value("${aliyun.oss.bucketName}")
+    private String ALIYUN_OSS_BUCKETNAME;
 
     @Autowired
     private RedisService redisService;
@@ -72,12 +77,12 @@ public class ImageOssServiceImpl implements ImageOssService {
         ossClient.shutdown();
 
         //上传成功后将文件名和URL保存到Redis缓存中去
-        redisService.set("finalFileName", originalFilename + "," + url);
+        redisService.set(finalFileName, originalFilename + "," + url);
 
 
         //将缓存中的KEY值放入队列当中
         //创建生产信息
-        Message message = new Message(RocketMQConfig.TOPIC, "testtag", "finalFileName".getBytes());
+        Message message = new Message(RocketMQConfig.TOPIC, "testtag", finalFileName.getBytes());
         //发送信息
         SendResult send = producer.getProducer().send(message);
 

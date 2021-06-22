@@ -15,9 +15,11 @@ import org.springframework.stereotype.Component;
 public class RocketMQProducer {
 
     private String producerGroup = "test_producer";
+
     private DefaultMQProducer producer;
 
     public RocketMQProducer() {
+
         //示例生产者
         producer = new DefaultMQProducer(producerGroup);
 
