@@ -91,7 +91,7 @@ public class ImageOssServiceImpl implements ImageOssService {
 //        //关闭生产者
 //        rocketMQTemplate.destroy();
         log.info("输出生产者信息={}", send);
-        producer.shutdown();
+        //producer.shutdown();
 
         return url;
     }

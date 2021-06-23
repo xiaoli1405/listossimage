@@ -1,5 +1,6 @@
 package com.example.listossimage.service.impl;
 
+import com.example.listossimage.entity.Image;
 import com.example.listossimage.repository.ImageRepository;
 import com.example.listossimage.service.MessageHandle;
 import com.example.listossimage.service.RedisService;
@@ -21,14 +22,15 @@ public class MessageHandleImpl implements MessageHandle {
     @Override
     public String handleMessage(MessageExt msg) throws UnsupportedEncodingException {
         String body = new String(msg.getBody(), "utf-8");
-        //redisService.remove(body);
         //分割字符串
-        //String substring = s.substring(s.lastIndexOf(","));
         String[] split = body.split(",");
-        String fileName = split[1];
-        String url = split[0];
+        String fileName = split[0];
+        String url = split[1];
         System.out.println(fileName+"  "+url);
-        //imageRepository.InsertImage(fileName, url);
+        Image image = new Image();
+        image.setImgText(fileName);
+        image.setImgUrl(url);
+        imageRepository.save(image);
         return null;
     }
 }
