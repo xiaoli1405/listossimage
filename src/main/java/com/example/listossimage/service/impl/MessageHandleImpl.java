@@ -14,8 +14,6 @@ import java.io.UnsupportedEncodingException;
 @Service
 public class MessageHandleImpl implements MessageHandle {
 
-    @Autowired
-    private RedisService redisService;
 
     @Autowired
     private ImageRepository imageRepository;
@@ -23,18 +21,14 @@ public class MessageHandleImpl implements MessageHandle {
     @Override
     public String handleMessage(MessageExt msg) throws UnsupportedEncodingException {
         String body = new String(msg.getBody(), "utf-8");
-        //System.out.println(body);
-        String s = redisService.get(body);
-        log.info("消费者消费的信息是:",body);
         //redisService.remove(body);
         //分割字符串
         //String substring = s.substring(s.lastIndexOf(","));
-        String[] split = s.split(",");
+        String[] split = body.split(",");
         String fileName = split[1];
         String url = split[0];
-
-        Integer maxId = imageRepository.getMaxId() + 1;
-        imageRepository.InsertImage(maxId,fileName, url);
+        System.out.println(fileName+"  "+url);
+        //imageRepository.InsertImage(fileName, url);
         return null;
     }
 }

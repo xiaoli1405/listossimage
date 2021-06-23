@@ -79,10 +79,13 @@ public class ImageOssServiceImpl implements ImageOssService {
         //上传成功后将文件名和URL保存到Redis缓存中去
         redisService.set(finalFileName, originalFilename + "," + url);
 
+        String urlAndOriginalFileName = redisService.get(finalFileName);
+
+
 
         //将缓存中的KEY值放入队列当中
         //创建生产信息
-        Message message = new Message(RocketMQConfig.TOPIC, "testtag", finalFileName.getBytes());
+        Message message = new Message(RocketMQConfig.TOPIC, "testtag", urlAndOriginalFileName.getBytes());
         //发送信息
         SendResult send = producer.getProducer().send(message);
 
