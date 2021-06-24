@@ -1,21 +1,18 @@
 package com.example.listossimage.component;
 
 import com.example.listossimage.config.RocketMQConfig;
-import com.example.listossimage.repository.ImageRepository;
-import com.example.listossimage.service.MessageHandle;
-import com.example.listossimage.service.RedisService;
+import com.example.listossimage.service.MessageHandleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
-import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
 
 
@@ -30,7 +27,7 @@ public class RocketMQConsumer {
     private DefaultMQPushConsumer consumer;
 
     @Autowired
-    private MessageHandle messageHandle;
+    private MessageHandleService messageHandleService;
 
     //消费者组
     public static final String CONSUMER_GROUP = "test-consumer";
@@ -51,7 +48,7 @@ public class RocketMQConsumer {
             // 会把不同的消息分别放置到不同的队列中
             for (MessageExt msg : msgs) {
                 try {
-                    messageHandle.handleMessage(msg);
+                    messageHandleService.handleMessage(msg);
                     log.info("消息处理成功！");
                 } catch (UnsupportedEncodingException e) {
                     log.error("消息处理失败！");

@@ -2,8 +2,7 @@ package com.example.listossimage.service.impl;
 
 import com.example.listossimage.entity.Image;
 import com.example.listossimage.repository.ImageRepository;
-import com.example.listossimage.service.MessageHandle;
-import com.example.listossimage.service.RedisService;
+import com.example.listossimage.service.MessageHandleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import java.io.UnsupportedEncodingException;
 
 @Slf4j
 @Service
-public class MessageHandleImpl implements MessageHandle {
+public class MessageHandleServiceImpl implements MessageHandleService {
 
 
     @Autowired
