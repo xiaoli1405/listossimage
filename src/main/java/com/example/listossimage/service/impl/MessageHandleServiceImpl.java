@@ -32,7 +32,7 @@ public class MessageHandleServiceImpl implements MessageHandleService {
         String url = split[1];
         String text = split[2];
         Image image = new Image();
-        image.setImgText(fileName);
+        image.setImgName(fileName);
         image.setImgUrl(url);
         image.setImgText(text);
         imageRepository.save(image);
