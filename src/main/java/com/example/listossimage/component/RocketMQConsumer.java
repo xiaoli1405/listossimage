@@ -38,7 +38,7 @@ public class RocketMQConsumer {
         consumer = new DefaultMQPushConsumer(CONSUMER_GROUP);
         consumer.setNamesrvAddr(RocketMQConfig.NAME_SERVER);
         //消费模式：一个新的订阅组第一次启动从队列的最后位置开始消费 后续再接着上次消费的进度开始消费
-        //consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
         //订阅主题和 标签下信息
         consumer.subscribe(RocketMQConfig.TOPIC, "*");
 

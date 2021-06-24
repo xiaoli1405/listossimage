@@ -17,5 +17,5 @@ public interface ImageOssService {
      * @param multipartFile
      * @return
      */
-    public String upload(MultipartFile multipartFile) throws IOException, InterruptedException, RemotingException, MQClientException, MQBrokerException;
+    public String upload(MultipartFile multipartFile, String fileMessage) throws IOException, InterruptedException, RemotingException, MQClientException, MQBrokerException;
 }

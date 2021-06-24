@@ -21,5 +21,9 @@ public class Image {
     private String imgUrl;
 
     @Column
+    private String imgName;
+
+    @Column
     private String imgText;
+
 }

@@ -48,7 +48,7 @@ public class ImageOssServiceImpl implements ImageOssService {
     private RocketMQProducer producer;
 
     @Override
-    public String upload(MultipartFile multipartFile) throws IOException, InterruptedException, RemotingException, MQClientException, MQBrokerException {
+    public String upload(MultipartFile multipartFile, String fileMessage) throws IOException, InterruptedException, RemotingException, MQClientException, MQBrokerException {
         //初始化OSSClient
         OSSClient ossClient = new OSSClient(ALIYUN_OSS_ENDPOINT, ALIYUN_OSS_ACCESSKEYID, ALIYUN_OSS_ACCESSKEYSECRET);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -76,23 +76,16 @@ public class ImageOssServiceImpl implements ImageOssService {
         ossClient.shutdown();
 
         //上传成功后将文件名和URL保存到Redis缓存中去
-        redisService.set(finalFileName, originalFilename + "," + url);
-
-        String urlAndOriginalFileName = redisService.get(finalFileName);
-
-
+        redisService.set(finalFileName, originalFilename + "," + url + "," + fileMessage);
 
         //将缓存中的KEY值放入队列当中
         //创建生产信息
-        Message message = new Message(RocketMQConfig.TOPIC, "testtag", urlAndOriginalFileName.getBytes());
+        Message message = new Message(RocketMQConfig.TOPIC, "testtag", finalFileName.getBytes());
         //发送信息
         SendResult send = producer.getProducer().send(message);
 
-//        rocketMQTemplate.convertAndSend(RocketMQConfig.TOPIC, finalFileName);
-//        //关闭生产者
-//        rocketMQTemplate.destroy();
+        //关闭生产者
         log.info("输出生产者信息={}", send);
-        producer.shutdown();
 
         return url;
     }

@@ -1,6 +1,7 @@
 package com.example.listossimage.controller;
 
 import com.example.listossimage.service.ImageOssService;
+import io.lettuce.core.dynamic.annotation.Param;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.rocketmq.client.exception.MQBrokerException;
@@ -25,10 +26,10 @@ public class ImageOssController {
 
     @ApiOperation("上传图片")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String upload(@RequestBody MultipartFile multipartFile) throws InterruptedException, RemotingException, MQClientException, MQBrokerException, IOException {
-        if(multipartFile == null) {
-            return "您还未上传图片，请上传图片！";
+    public String upload(@RequestBody MultipartFile multipartFile, String fileMessage) throws InterruptedException, RemotingException, MQClientException, MQBrokerException, IOException {
+        if(multipartFile == null && fileMessage == null && "".equals(fileMessage)) {
+            return "您还未输入完全，请输入完全的信息！";
         }
-        return imageOssService.upload(multipartFile);
+        return imageOssService.upload(multipartFile, fileMessage);
     }
 }
