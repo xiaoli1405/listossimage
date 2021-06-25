@@ -17,7 +17,7 @@ Swagger 接口文档工具
   
   2.插入数据库时，使用的是原生的SQL，数据库报返回结果错误，导致消费者无法消费消息，无法把ACK信号发送给服务器，导致重复消费消息。解决方案：把原生的SQL换成JPA的HQL（面向对象的SQL）
   
-  #安装部署（假设环境已经搭建）
+  #安装部署（环境已经搭建）
   
   一、修改OSS对象存储的accessKeyId、accessKeySecret、endpoint、lst-oss （根据配置文件修改） 
   

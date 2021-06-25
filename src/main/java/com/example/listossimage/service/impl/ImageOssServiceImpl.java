@@ -75,7 +75,7 @@ public class ImageOssServiceImpl implements ImageOssService {
         //关闭OSSClient
         ossClient.shutdown();
 
-        //上传成功后将文件名和URL保存到Redis缓存中去
+        //上传成功后将文件名和URL和文本保存到Redis缓存中去
         redisService.set(finalFileName, originalFilename + "," + url + "," + fileMessage);
 
         //将缓存中的KEY值放入队列当中
