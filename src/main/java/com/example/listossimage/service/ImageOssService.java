@@ -1,5 +1,6 @@
 package com.example.listossimage.service;
 
+import com.example.listossimage.entity.Image;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.remoting.exception.RemotingException;
@@ -17,5 +18,7 @@ public interface ImageOssService {
      * @param multipartFile
      * @return
      */
-    public String upload(MultipartFile multipartFile, String fileMessage) throws IOException, InterruptedException, RemotingException, MQClientException, MQBrokerException;
+    public String upload(MultipartFile multipartFile, String fileMessage) throws Exception;
+
+    public Image getImageInfo(String url);
 }

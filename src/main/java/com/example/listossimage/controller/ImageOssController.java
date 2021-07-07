@@ -26,10 +26,19 @@ public class ImageOssController {
 
     @ApiOperation("上传图片")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String upload(@RequestBody MultipartFile multipartFile, String fileMessage) throws InterruptedException, RemotingException, MQClientException, MQBrokerException, IOException {
+    public String upload(@RequestBody MultipartFile multipartFile, String fileMessage) throws Exception {
         if(multipartFile == null && fileMessage == null && "".equals(fileMessage)) {
             return "您还未输入完全，请输入完全的信息！";
         }
         return imageOssService.upload(multipartFile, fileMessage);
+    }
+
+    @ApiOperation("根据图片url获取图片的信息是否成功")
+    @RequestMapping(value = "getImageInfo", method = RequestMethod.GET)
+    public String getImageInfo(String url) {
+        if (imageOssService.getImageInfo(url) != null){
+            return "1";
+        }
+        return "0";
     }
 }

@@ -4,6 +4,8 @@ import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.example.listossimage.component.RocketMQProducer;
 import com.example.listossimage.config.RocketMQConfig;
+import com.example.listossimage.entity.Image;
+import com.example.listossimage.repository.ImageRepository;
 import com.example.listossimage.service.ImageOssService;
 import com.example.listossimage.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +42,8 @@ public class ImageOssServiceImpl implements ImageOssService {
     @Value("${aliyun.oss.bucketName}")
     private String ALIYUN_OSS_BUCKETNAME;
 
+    @Autowired
+    private ImageRepository imageRepository;
 
     @Autowired
     private RedisService redisService;
@@ -88,5 +92,10 @@ public class ImageOssServiceImpl implements ImageOssService {
         log.info("输出生产者信息={}", send);
 
         return url;
+    }
+
+    @Override
+    public Image getImageInfo(String url) {
+        return imageRepository.getByUrl(url);
     }
 }
